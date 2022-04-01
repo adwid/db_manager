@@ -1,0 +1,23 @@
+_all_db() 
+{
+    local cur opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    opts="$(ldb)"
+
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+}
+complete -F _all_db setdb
+
+_get_savepoints()
+{
+    local cur opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    current_db="$(cat /home/odoo/.current_db)"
+    opts="$(ldb | grep "${current_db}__" | sed 's/__/#/g' | cut -d'#' -f2)"
+
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+}
+complete -F _get_savepoints restoredb
+complete -F _get_savepoints savedb

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+filepath="$HOME/.current_db"
+
+cat $filepath

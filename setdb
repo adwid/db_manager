@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ $# -lt 1 ]; then
+    >&2 echo "Needs 1 parameter (db_name)"
+    exit 1
+fi
+
+sed -i "s/db_name =.*/db_name = $1/g" $HOME/.odoorc
+echo $1 > $HOME/.current_db
+

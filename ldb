@@ -1,0 +1,5 @@
+#!/bin/bash
+
+filter=${1:-""}
+
+psql -XAtqwl | cut -d'|' -f1 | sort | grep "$filter"
