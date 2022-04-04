@@ -40,7 +40,8 @@ restoredb
 ```
 
 ### Misc
-- `copydb` takes to arguments _X_ and _Y_ and copies _X_ on a new DB called _Y_. It is used by `savedb` and `restoredb`
+- `copydb` takes two arguments _X_ and _Y_ and copies _X_ on a new DB called _Y_. It is used by `savedb` and `restoredb`
 - `killodoo` kills all Odoo processes. It is executed by `copydb`
 - `ldb` lists all databases
+- `dropall`: for each argument _X_, it drops all databases that contain _X_ in their name
 - `.bash_completion` allows the user to auto complete the arguments of `setdb`, `savedb` and `restoredb` in his terminal
