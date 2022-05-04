@@ -8,7 +8,7 @@ if [ $# -lt 2 ]; then
 fi
 
 find_db() {
-	ldb | grep -qw $1
+	ldb | grep -Eq "^$1$"
 }
 
 from=$1
