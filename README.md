@@ -45,3 +45,4 @@ restoredb
 - `ldb` lists all databases
 - `dropall`: for each argument _X_, it drops all databases that contain _X_ in their name
 - `.bash_completion` allows the user to auto complete the arguments of `setdb`, `savedb` and `restoredb` in his terminal
+- `renamedb`: takes one argument X and will rename the current DB into X
