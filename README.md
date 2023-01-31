@@ -3,7 +3,7 @@ Tools to manage the DBs (switch, save & restore)
 
 ### Base
 
-All scripts are based on the idea that we are working on a current DB. To define and get that current DB's name, `setdb` and `getdb` must be used
+All scripts are based on the idea that we are working on one DB at the time. To define and get that current DB's name, `setdb` and `getdb` must be used
 - `setdb` will write the argument in a hidden file. It also writes the DB on the `.odoorc` file (but this line is not mandatory and can be removed)
 - `getdb` simply reads and returns the content of the hidden file
 
