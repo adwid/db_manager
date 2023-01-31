@@ -8,7 +8,10 @@ _all_db()
 
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 }
+complete -F _all_db dropall
 complete -F _all_db setdb
+complete -F _all_db copydb
+complete -F _all_db renamedb
 
 _get_savepoints()
 {
