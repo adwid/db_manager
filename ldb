@@ -1,5 +1,26 @@
 #!/bin/bash
 
 filter=${1:-""}
+include_savepoints=false
 
-psql -XAtqwl | cut -d'|' -f1 | sort | grep "$filter"
+while getopts ":a" o; do
+  case "${o}" in
+    a)
+      include_savepoints=true
+      filter=${2:-""}
+      ;;
+    *)
+      echo "Illegal option" && exit 1
+      ;;
+  esac
+done
+
+res=$(psql -XAtqwl | cut -d'|' -f1 | sort)
+
+if [ "$include_savepoints" = false ]
+then
+  res=$(echo "$res" | grep -v '__')
+fi
+
+echo "$res" | grep "$filter"
+

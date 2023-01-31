@@ -3,12 +3,12 @@
 set -e
 
 if [ $# -lt 2 ]; then
-	>&2 echo "Needs 2 parameters (FROM and TO)"
-	exit 1
+    >&2 echo "Needs 2 parameters (FROM and TO)"
+    exit 1
 fi
 
 find_db() {
-	ldb | grep -Eq "^$1$"
+	ldb -a | grep -Eq "^$1$"
 }
 
 from=$1
@@ -25,5 +25,5 @@ if $(find_db $to); then
 	dropdb $to
 fi
 
-createdb -O odoo -T $from $to
+createdb -T $from $to
 
