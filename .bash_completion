@@ -1,25 +1,22 @@
 #!/bin/bash
 
-_all_db()
-{
+_all_db() {
     local cur opts
     cur="${COMP_WORDS[COMP_CWORD]}"
     opts="$(ldb)"
 
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    COMPREPLY=($(compgen -W "${opts}" -- "${cur}"))
 }
 complete -F _all_db dropall
 complete -F _all_db setdb
 complete -F _all_db copydb
-complete -F _all_db renamedb
 
-_get_savepoints()
-{
-    local cur opts
+_get_savepoints() {
+    local cur opts current_db
     cur="${COMP_WORDS[COMP_CWORD]}"
     current_db="$(getdb)"
-    opts="$(ldb -a | grep "${current_db}__" | sed 's/__/#/g' | cut -d'#' -f2)"
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    opts="$(ldb -a | grep "^${current_db}__" | sed 's/__/#/g' | cut -d'#' -f2)"
+    COMPREPLY=($(compgen -W "${opts}" -- "${cur}"))
 }
 complete -F _get_savepoints restoredb
 complete -F _get_savepoints savedb

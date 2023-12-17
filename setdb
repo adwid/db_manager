@@ -5,6 +5,5 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-sed -i "s/db_name =.*/db_name = $1/g" $HOME/.odoorc
-echo $1 > $HOME/.current_db
-
+sed -i "s/db_name =.*/db_name = $1/g" "$HOME/.odoorc"
+echo "$1" > "$HOME/.current_db"

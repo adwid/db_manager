@@ -10,17 +10,15 @@ while getopts ":a" o; do
       filter=${2:-""}
       ;;
     *)
-      echo "Illegal option" && exit 1
+      echo "Illegal option" >&2 && exit 1
       ;;
   esac
 done
 
 res=$(psql -XAtqwl | cut -d'|' -f1 | sort)
 
-if [ "$include_savepoints" = false ]
-then
+if [ "$include_savepoints" = false ]; then
   res=$(echo "$res" | grep -v '__')
 fi
 
 echo "$res" | grep "$filter"
-

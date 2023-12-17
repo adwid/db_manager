@@ -1,15 +1,10 @@
 #!/bin/bash 
 
-function delete_dbs {
-	for db in $@;
-	do
-		echo "Drop $db"
-		dropdb --if-exists $db
-	done
-}
-
-
-for arg in "$@";
-do
-	delete_dbs $(ldb -a | grep "$arg")
+for arg in "$@"; do
+  db_list=$(ldb -a | grep "$arg")
+  for db_name in $db_list; do
+    echo "Deleting $db_name"
+    dropdb --if-exists "$db_name"
+    rm -rf "$HOME/.local/share/Odoo/filestore/$db_name"
+  done
 done

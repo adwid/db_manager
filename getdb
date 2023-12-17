@@ -2,4 +2,4 @@
 
 filepath="$HOME/.current_db"
 
-cat $filepath
+cat "$filepath"

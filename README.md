@@ -1,48 +1,89 @@
 Tools to manage the DBs (switch, save & restore)
 
+### Setup
 
-### Base
+To define and get the database you are working on, `setdb` and `getdb`
+must be used
 
-All scripts are based on the idea that we are working on one DB at the time. To define and get that current DB's name, `setdb` and `getdb` must be used
-- `setdb` will write the argument in a hidden file. It also writes the DB on the `.odoorc` file (but this line is not mandatory and can be removed)
-- `getdb` simply reads and returns the content of the hidden file
+- `setdb` takes one argument and writes it in a file. By default, it
+  also writes the DB name in the `.odoorc` file, but this line is
+  actually not mandatory and can be removed
+- `getdb` simply reads and returns the content of the file
 
 ### Save & Restore
 
-Suppose an initialized DB with a specific configuration on it. I want to save its state and have the possibility to restore that state
-- `savedb` will save the current DB (`getdb`) into a new one. Suppose _X_ is the name of the current DB:
-  - If an argument _Y_ is given to `savedb`: the saved DB is called _X\_\_Y_
-  - Otherwise: the saved DB is called _X\_\_SAVEPOINT_
-- `restoredb` tries to find a saved state of the current DB (`getdb`) and restores it. Suppose _X_ is the name of the current DB:
-  - If an argument _Y_ is given to `restoredb`: the script tries to find a saved state of _X_ called _Y_ (i.e., it searches for a DB called _X\_\_Y_). If such a state exists, it will restore it on _X_
-  - Otherwise, it tries to find a saved state called _SAVEPOINT_ and does the same than above
+Here are the two mains scripts of this repo:
 
-/!\\ The filestore is never saved nor restored. In most cases, it is not useful. 
+**`savedb`:**
+It stores the state of the current DB and its filestore. To do so, the
+script simply copies the current DB into a new one
+called `<current_db>__<savepoint name>`, where `<savepoint name>` is the
+optional argument of the script. If not provided, the savepoint name is
+defaulted to *SAVEPOINT*
 
-#### Flow example
+**`restoredb`:**
+It restores the current DB to a given state. The script takes one
+argument: the savepoint name. If not provided, it will use the state
+nammed *SAVEPOINT*.
+
+### Flow example
+
 I want to work on a DB called _1234567-15.0_:
+
 ```
 setdb 1234567-15.0
 ```
-I run Odoo, I create some products and set a specific configuration. I don't want to lose it:
+
+I run Odoo, I create some products and set a specific configuration. I'm
+going to follow some additional steps, but I want to create a backup
+point first so that I can return to it later, and this state should be
+called *config*:
+
 ```
 savedb config
+# This will copy the current DB to a new one called 1234567-15.0__config
 ```
-Then I do some stuff and I create a SO. 
-I'm going to validate it but I would like to save the current state and I don't care about the name:
+
+I then go through several steps: I create a SO, confirm it, process the
+delivery, create the invoice, etc. I'm about to post this invoice, but I
+know that my bug appears right at that moment. In doubt, I first make
+another backup, this time without worrying about the name:
+
 ```
 savedb
+# This will copy the current DB to a new one called 1234567-15.0__SAVEPOINT
 ```
-Again, I confirm the SO and do some stuff. Finally, I want to go back either before the SO creation or before its validation:
+
+I then post the invoice, try few things, change the code etc., and now I
+would like to try again. I can simply restore my DB juste before the
+invoice posting:
+
+```
+restoredb
+# This will copy the DB called 1234567-15.0__SAVEPOINT to the current one
+```
+
+Suppose now I would even like to change the configuration, but it's a
+bit complicated because the posted AML, some constraints, etc. I can
+simply restore the first state I saved:
+
 ```
 restoredb config
-restoredb
+# This will copy the DB called 1234567-15.0__config to the current one
 ```
 
 ### Misc
-- `copydb` takes two arguments _X_ and _Y_ and copies _X_ on a new DB called _Y_. It is used by `savedb` and `restoredb`
-- `killodoo` kills all Odoo processes. It is executed by `copydb`
-- `ldb` lists all databases
-- `dropall`: for each argument _X_, it drops all databases that contain _X_ in their name
-- `.bash_completion` allows the user to auto complete the arguments of `setdb`, `savedb` and `restoredb` in his terminal
-- `renamedb`: takes one argument X and will rename the current DB into X
+
+This repository provides few other scripts. Some of them are used by the
+above ones, some other are additional tools.
+
+- `copydb` takes two arguments _X_ and _Y_, it copies _X_ on a new DB
+  called _Y_. It is used by `savedb` and `restoredb`
+- `killodoo` kills all Odoo processes. It is executed by `copydb`,
+  otherwise it's not possible to process the copy.
+- `ldb` lists all databases  (`-a` will also list all savepoints)
+- `dropall`: for each argument _X_, it drops all databases that contain
+  _X_ in their name
+- `.bash_completion` allows the user to auto complete the arguments
+  of `dropdb`, `setdb`, `copydb`, `restoredb` and `savedb` in the
+  terminal

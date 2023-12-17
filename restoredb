@@ -4,5 +4,4 @@ db=$(getdb)
 
 name_extension=${1:-SAVEPOINT}
 
-copydb ${db}__${name_extension} $db
-
+copydb "${db}__${name_extension}" "$db"

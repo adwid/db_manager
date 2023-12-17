@@ -1,14 +1,16 @@
 #!/bin/bash
 
+filestore_dir="$HOME/.local/share/Odoo/filestore"
+
 set -e
 
-if [ $# -lt 2 ]; then
-    >&2 echo "Needs 2 parameters (FROM and TO)"
-    exit 1
+if [ "$#" -ne 2 ]; then
+  >&2 echo "Usage: $0 <FROM_DB> <TO_DB>"
+  exit 1
 fi
 
 find_db() {
-	ldb -a | grep -Eq "^$1$"
+  ldb -a | grep -Eq "^$1$"
 }
 
 from=$1
@@ -16,14 +18,28 @@ to=$2
 
 killodoo
 
-if ! $(find_db $from); then
-	>&2 echo "DB $from does not exist"
-	exit 1
+if ! find_db "$from"; then
+  >&2 echo "DB $from does not exist"
+  exit 1
 fi
 
-if $(find_db $to); then
-	dropdb $to
+if find_db "$to"; then
+  dropdb "$to"
 fi
 
-createdb -T $from $to
+restore_filestore() {
+  local source_dir="$filestore_dir/$from"
+  local destination_dir="$filestore_dir/$to"
 
+  if [ -d "$destination_dir" ]; then
+    rm -rf "$destination_dir"
+  fi
+
+  if [ -d "$source_dir" ]; then
+    mkdir -p "$destination_dir" && cp -rf "$source_dir"/* "$destination_dir"/
+  fi
+}
+
+restore_filestore &
+createdb -T "$from" "$to" &
+wait
