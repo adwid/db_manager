@@ -3,5 +3,5 @@
 pids=$(pgrep -f '[p]ython.*odoo-bin')
 
 if [ -n "$pids" ]; then
-  kill -9 "$pids"
+  kill -9 $pids
 fi
