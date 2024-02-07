@@ -10,7 +10,7 @@ if [ "$#" -ne 2 ]; then
 fi
 
 find_db() {
-  ldb -a | grep -Eq "^$1$"
+  ldb -a | grep -xFq "$1"
 }
 
 from=$1
