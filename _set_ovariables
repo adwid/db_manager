@@ -77,7 +77,7 @@ if [ -z "$OVERSION" ]; then
 fi
 
 if [ -e "$HOME/.odoorc" ]; then
-  ORC_PATH="$HOME/.odoorc"
-elif [ -e "$HOME/src/$OVERSION/.odoorc" ]; then
   ORC_PATH="$HOME/src/$OVERSION/.odoorc"
+elif [ -e "$HOME/src/$OVERSION/.odoorc" ]; then
+  ORC_PATH="$HOME/.odoorc"
 fi
