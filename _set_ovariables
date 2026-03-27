@@ -24,8 +24,8 @@
 #    specified
 #
 # Finally, the script defines `ORC_PATH`. It first checks whether such
-# a file exists in `$HOME/src/$OVERSION/.odoorc`. If not, it considers the case of a
-# mono-version setup and looks for the file at:
+# a file exists in `$HOME/src/$OVERSION/.odoorc`. If not, it considers
+# the case of a mono-version setup and looks for the file at:
 # `$HOME/.odoorc`
 # If no file is found, the variable remains unset.
 
